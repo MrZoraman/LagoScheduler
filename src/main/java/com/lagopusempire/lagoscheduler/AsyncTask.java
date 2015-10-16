@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.*;
 
 public class AsyncTask implements Runnable
 {
-    private enum Types {INT, DOUBLE, STRING, BOOLEAN};
+    private enum Types {INT, DOUBLE, STRING, BOOLEAN, VOID};
     
     private final AtomicBoolean done = new AtomicBoolean(false);
     
@@ -55,6 +55,9 @@ public class AsyncTask implements Runnable
                     break;
                 case BOOLEAN:
                     onBooleanReceive(booleanBuffer.get());
+                    break;
+                case VOID:
+                    onVoidReceive();
                     break;
             }
         }
@@ -110,10 +113,20 @@ public class AsyncTask implements Runnable
         }
     }
     
+    void sendVoid()
+    {
+        typeUpdated.set(Types.VOID);
+        synchronized(lock)
+        {
+            lock.notify();
+        }
+    }
+    
     protected void onIntReceive(int i) { }
     protected void onDoubleReceive(double d) { }
     protected void onStringReceive(String s) { }
     protected void onBooleanReceive(boolean b) { }
+    protected void onVoidReceive() { }
     
     protected void onStart() { }
     protected void onStop() { }

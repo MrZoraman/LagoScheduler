@@ -37,6 +37,11 @@ public class MainTest
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
+                System.out.println("sending void to test task on thread " + getThreadId());
+                task.sendVoid();
+                
+                System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
+                Thread.sleep(1000);
                 System.out.println("stopping test task on thread " + getThreadId());
                 task.stop();
             }
@@ -85,6 +90,12 @@ public class MainTest
         protected void onBooleanReceive(boolean b)
         {
             System.out.println("Received boolean " + b + " on thread " + getThreadId());
+        }
+        
+        @Override
+        protected void onVoidReceive()
+        {
+            System.out.println("Received void on thread " + getThreadId());
         }
     }
 }
