@@ -17,22 +17,19 @@ public class AsyncTask implements Runnable
     
     private final Object lock = new Object();
     
-    private volatile Runnable doneCallback;
+    private final Runnable doneCallback;
+    private final AsyncTaskMessageHandler handler;
     
-    void setDoneCallback(Runnable doneCallback)
+    AsyncTask(Runnable doneCallback, AsyncTaskMessageHandler handler)
     {
         this.doneCallback = doneCallback;
-    }
-    
-    Runnable getDoneCallback()
-    {
-        return doneCallback;
+        this.handler = handler;
     }
     
     @Override
     public void run()
     {
-        onStart();
+        handler.onStart();
         while(true)
         {
             synchronized(lock)
@@ -48,7 +45,7 @@ public class AsyncTask implements Runnable
             }
             if(done.get())
             {
-                onStop();
+                handler.onStop();
                 break;
             }
             
@@ -56,20 +53,20 @@ public class AsyncTask implements Runnable
             switch(type)
             {
                 case INT:
-                    onIntReceive(intBuffer.get());
+                    handler.onIntReceive(intBuffer.get());
                     break;
                 case DOUBLE:
                     double d = Double.longBitsToDouble(doubleBuffer.get());
-                    onDoubleReceive(d);
+                    handler.onDoubleReceive(d);
                     break;
                 case STRING:
-                    onStringReceive(stringBuffer.get());
+                    handler.onStringReceive(stringBuffer.get());
                     break;
                 case BOOLEAN:
-                    onBooleanReceive(booleanBuffer.get());
+                    handler.onBooleanReceive(booleanBuffer.get());
                     break;
                 case VOID:
-                    onVoidReceive();
+                    handler.onVoidReceive();
                     break;
             }
         }
@@ -134,13 +131,4 @@ public class AsyncTask implements Runnable
             lock.notify();
         }
     }
-    
-    protected void onIntReceive(int i) { }
-    protected void onDoubleReceive(double d) { }
-    protected void onStringReceive(String s) { }
-    protected void onBooleanReceive(boolean b) { }
-    protected void onVoidReceive() { }
-    
-    protected void onStart() { }
-    protected void onStop() { }
 }
