@@ -34,13 +34,20 @@ public class LagoScheduler
         return 0;
     }
     
-    public int spawnTaskAsync(AsyncTask t)
+    public int spawnTaskAsync(AsyncTask task)
     {
         final int tid = tids.getAndIncrement();
-        asyncTasks.put(tid, t);
-        Thread thread = new Thread(t);
+        asyncTasks.put(tid, task);
+        
+        task.setDoneCallback(() -> asyncTasks.remove(tid));
+        
+        Thread thread = new Thread(task);
         thread.setDaemon(false);
         thread.start();
         return tid;
     }
+//    
+//    public boolean sendInt(int tid, boolean b)
+//    {
+//    }
 }

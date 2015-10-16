@@ -17,6 +17,18 @@ public class AsyncTask implements Runnable
     
     private final Object lock = new Object();
     
+    private volatile Runnable doneCallback;
+    
+    void setDoneCallback(Runnable doneCallback)
+    {
+        this.doneCallback = doneCallback;
+    }
+    
+    Runnable getDoneCallback()
+    {
+        return doneCallback;
+    }
+    
     @Override
     public void run()
     {
@@ -61,6 +73,7 @@ public class AsyncTask implements Runnable
                     break;
             }
         }
+        doneCallback.run();
     }
     
     void stop()
