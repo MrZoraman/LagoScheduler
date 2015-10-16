@@ -23,17 +23,17 @@ public class MainTest
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending double 3.141 to test task on thread " + getThreadId());
-                task.setDouble(3.141);
+                task.sendDouble(3.141);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending string 'foomfah' to test task on thread " + getThreadId());
-                task.setString("foomfah");
+                task.sendString("foomfah");
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending boolean false to test task on thread " + getThreadId());
-                task.setBoolean(false);
+                task.sendBoolean(false);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);

@@ -82,7 +82,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void setDouble(double d)
+    void sendDouble(double d)
     {
         long bits = Double.doubleToLongBits(d);
         doubleBuffer.set(bits);
@@ -93,7 +93,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void setString(String s)
+    void sendString(String s)
     {
         stringBuffer.set(s);
         typeUpdated.set(Types.STRING);
@@ -103,7 +103,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void setBoolean(Boolean b)
+    void sendBoolean(Boolean b)
     {
         booleanBuffer.set(b);
         typeUpdated.set(Types.BOOLEAN);
