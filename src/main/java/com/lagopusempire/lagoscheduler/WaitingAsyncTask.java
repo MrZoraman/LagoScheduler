@@ -1,12 +1,8 @@
 package com.lagopusempire.lagoscheduler;
 
-import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-final class WaitingAsyncTask extends Task
+final class WaitingAsyncTask extends Task implements Runnable
 {
     private final Object lock = new Object();
-    private final AtomicBoolean done = new AtomicBoolean(false);
     
     public WaitingAsyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
     {
@@ -27,49 +23,25 @@ final class WaitingAsyncTask extends Task
                 }
                 catch (InterruptedException ignored)
                 {
-                    done.set(true);
+                    setDone();
                 }
             }
-            if(done.get())
+            
+            if(isDone())
             {
-                handler.onStop();
                 break;
             }
             
-            final Iterator<Types> it = typeUpdated.iterator();
-            while(it.hasNext())
-            {
-                Types type = it.next();
-                switch(type)
-                {
-                    case INT:
-                        handler.onReceive(intBuffer.get());
-                        break;
-                    case DOUBLE:
-                        double d = Double.longBitsToDouble(doubleBuffer.get());
-                        handler.onReceive(d);
-                        break;
-                    case STRING:
-                        handler.onReceive(stringBuffer.get());
-                        break;
-                    case BOOLEAN:
-                        handler.onReceive(booleanBuffer.get());
-                        break;
-                    case VOID:
-                        handler.onReceive();
-                        break;
-                }
-            }
-            
-            resetTypeUpdated();
+            notifyHandlerMethods();
         }
-        doneCallback.run();
+        handler.onStop();
+        finished();
     }
     
     @Override
     public void stop()
     {
-        done.set(true);
+        super.stop();
         synchronized(lock)
         {
             lock.notify();

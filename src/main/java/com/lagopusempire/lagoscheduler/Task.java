@@ -1,21 +1,24 @@
 package com.lagopusempire.lagoscheduler;
 
+import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-abstract class Task implements Runnable
+abstract class Task
 {
-    protected final AtomicInteger intBuffer = new AtomicInteger(0);
-    protected final AtomicLong doubleBuffer = new AtomicLong(0);
-    protected final AtomicReference<String> stringBuffer = new AtomicReference<>();
-    protected final AtomicBoolean booleanBuffer = new AtomicBoolean(false);
+    private final AtomicBoolean done = new AtomicBoolean(false);
     
-    protected final CopyOnWriteArraySet<Types> typeUpdated = new CopyOnWriteArraySet<>();
+    private final AtomicInteger intBuffer = new AtomicInteger(0);
+    private final AtomicLong doubleBuffer = new AtomicLong(0);
+    private final AtomicReference<String> stringBuffer = new AtomicReference<>();
+    private final AtomicBoolean booleanBuffer = new AtomicBoolean(false);
     
-    protected final Runnable doneCallback;
+    private final CopyOnWriteArraySet<Types> typeUpdated = new CopyOnWriteArraySet<>();
+    
+    private final Runnable doneCallback;
     protected final TaskBehaviorHandler handler;
     
     Task(Runnable doneCallback, TaskBehaviorHandler handler)
@@ -24,11 +27,47 @@ abstract class Task implements Runnable
         this.handler = handler;
     }
     
-    public abstract void stop();
-    
-    protected void resetTypeUpdated()
+    public void stop()
     {
+        setDone();
+    }
+    
+    public void tick()
+    {
+    }
+    
+    protected void notifyHandlerMethods()
+    {
+        final Iterator<Types> it = typeUpdated.iterator();
+        while(it.hasNext())
+        {
+            Types type = it.next();
+            switch(type)
+            {
+                case INT:
+                    handler.onReceive(intBuffer.get());
+                    break;
+                case DOUBLE:
+                    double d = Double.longBitsToDouble(doubleBuffer.get());
+                    handler.onReceive(d);
+                    break;
+                case STRING:
+                    handler.onReceive(stringBuffer.get());
+                    break;
+                case BOOLEAN:
+                    handler.onReceive(booleanBuffer.get());
+                    break;
+                case VOID:
+                    handler.onReceive();
+                    break;
+            }
+        }
         typeUpdated.clear();
+    }
+    
+    protected void finished()
+    {
+        doneCallback.run();
     }
     
     void send(int i)
@@ -59,5 +98,15 @@ abstract class Task implements Runnable
     void send()
     {
         typeUpdated.add(Types.VOID);
+    }
+    
+    public final void setDone()
+    {
+        done.set(true);
+    }
+    
+    public final boolean isDone()
+    {
+        return done.get();
     }
 }

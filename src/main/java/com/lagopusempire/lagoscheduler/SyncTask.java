@@ -1,17 +1,16 @@
 package com.lagopusempire.lagoscheduler;
 
-class SyncTask implements Runnable
+
+class SyncTask extends Task
 {
-    private final TaskBehaviorHandler handler;
-    
-    SyncTask(TaskBehaviorHandler handler)
+    public SyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
     {
-        this.handler = handler;
+        super(doneCallback, handler);
     }
     
     @Override
-    public void run()
+    public void tick()
     {
-        handler.run();
+        notifyHandlerMethods();
     }
 }
