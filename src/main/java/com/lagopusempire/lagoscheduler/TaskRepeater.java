@@ -39,15 +39,18 @@ public class TaskRepeater
             return;
         }
         
-        if(repeats >= 0 && repeats < timesRun)
+        if(timesRun >= repeats)
         {
             shouldRun = false;
-            willRunAgain = false;
         }
         else if(tick % interval == 0)
         {
             shouldRun = true;
             timesRun++;
+            if(timesRun >= repeats)
+            {
+                willRunAgain = false;
+            }
         }
         else
         {
