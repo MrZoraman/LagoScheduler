@@ -117,28 +117,25 @@ class Task implements TaskOperation
             switch(type)
             {
                 case INT:
-                    Integer[] int_arr = intBuffer.toArray(new Integer[intBuffer.size()]);
-                    handler.onReceive(int_arr);
+                    intBuffer.forEach(num -> handler.onReceive(num.intValue()));
                     break;
                 case DOUBLE:
-                    Double[] double_arr = doubleBuffer.toArray(new Double[doubleBuffer.size()]);
-                    handler.onReceive(double_arr);
+                    doubleBuffer.forEach(num -> handler.onReceive(num.doubleValue()));
                     break;
                 case STRING:
-                    String[] string_arr = stringBuffer.toArray(new String[stringBuffer.size()]);
-                    handler.onReceive(string_arr);
+                    stringBuffer.forEach(str -> handler.onReceive(str));
                     break;
                 case BOOLEAN:
-                    Boolean[] boolean_arr = booleanBuffer.toArray(new Boolean[booleanBuffer.size()]);
-                    handler.onReceive(boolean_arr);
+                    booleanBuffer.forEach(bool -> handler.onReceive(bool.booleanValue()));
                     break;
                 case OBJECT:
-                    Object[] object_arr = objectBuffer.toArray(new Object[objectBuffer.size()]);
-                    handler.onReceive(object_arr);
+                    objectBuffer.forEach(obj -> handler.onReceive(obj));
                     break;
                 case VOID:
-                    int voids = voidBuffer.get();
-                    handler.onReceive(voids);
+                    for(int ii = 0; ii < voidBuffer.get(); ii++)
+                    {
+                        handler.onReceive();
+                    }
                     break;
             }
         }

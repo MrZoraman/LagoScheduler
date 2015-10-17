@@ -44,16 +44,13 @@ public class MainTest
             this.name = name;
         }
         
-        private void notifyReceive(Object[] stuff)
+        private void notifyReceive(int stuff)
         {
-            for(int ii = 0; ii < stuff.length; ii++)
-            {
-                printWithId("recieved data! name=" + name + ", id=" + ii + ", data=" + stuff[ii]);
-            }
+            printWithId("recieved data! name=" + name + ", data=" + stuff);
         }
         
         @Override
-        public void onReceive(Object[] stuff)
+        public void onReceive(int stuff)
         {
             notifyReceive(stuff);
         }
