@@ -103,7 +103,6 @@ class Task implements Runnable
         typeUpdated.clear();
     }
     
-    
     void send(int i)
     {
         intBuffer.set(i);
