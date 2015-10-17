@@ -8,7 +8,7 @@ public class TaskRepeaterTester
     @Test
     public void testRunOnce()
     {
-        TaskRepeater repeater = new TaskRepeater(0, 0, 0);
+        TaskRepeater repeater = new TaskRepeater(0, 1, 1);
         repeater.cycle();
         assertEquals(true, repeater.shouldRun());
         repeater.cycle();
