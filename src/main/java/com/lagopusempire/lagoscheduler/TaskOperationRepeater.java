@@ -1,8 +1,5 @@
 package com.lagopusempire.lagoscheduler;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class TaskOperationRepeater implements Runnable
 {
     private final long expectedDelta;
