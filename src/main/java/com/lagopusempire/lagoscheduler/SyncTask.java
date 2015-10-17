@@ -1,11 +1,11 @@
 package com.lagopusempire.lagoscheduler;
 
-class WaitingSyncTask extends Task
+class SyncTask extends Task
 {
     private final Runnable task;
     private final TaskRepeatInstructions repeatInstructions;
     
-    public WaitingSyncTask(Runnable doneCallback, TaskBehaviorHandler handler, Runnable task, TaskRepeatInstructions repeatInstructions)
+    public SyncTask(Runnable doneCallback, TaskBehaviorHandler handler, Runnable task, TaskRepeatInstructions repeatInstructions)
     {
         super(doneCallback, handler);
         this.task = task;

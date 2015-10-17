@@ -25,7 +25,7 @@ public class LagoScheduler
     private final ConcurrentMap<Integer, Task> tasks = new ConcurrentHashMap<>();
     //private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
     private final ExecutorService runOnceAsyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-    private final ConcurrentMap<Integer, WaitingSyncTask> syncTasks = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, SyncTask> syncTasks = new ConcurrentHashMap<>();
     
     private LagoScheduler()
     {
@@ -46,7 +46,7 @@ public class LagoScheduler
     {
         int tid = tids.getAndIncrement();
         
-        WaitingSyncTask task = new WaitingSyncTask(() -> {
+        SyncTask task = new SyncTask(() -> {
             tasks.remove(tid);
             syncTasks.remove(tid);
         }, handler, toDo, repeatInstructions);
