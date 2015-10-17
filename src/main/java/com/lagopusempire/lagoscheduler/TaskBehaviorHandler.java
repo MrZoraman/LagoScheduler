@@ -1,6 +1,6 @@
 package com.lagopusempire.lagoscheduler;
 
-public interface TaskBehaviorHandler
+public interface TaskBehaviorHandler extends Runnable
 {
     default void onReceive(int i) { }
     default void onReceive(double d) { }
@@ -10,4 +10,7 @@ public interface TaskBehaviorHandler
     
     default void onStart() { }
     default void onStop() { }
+    
+    @Override
+    default void run() { }
 }

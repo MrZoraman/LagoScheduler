@@ -2,6 +2,7 @@ package com.lagopusempire.lagoscheduler;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LagoScheduler
@@ -18,6 +19,7 @@ public class LagoScheduler
     
     private final AtomicInteger tids = new AtomicInteger(0);
     private final ConcurrentMap<Integer, WaitingAsyncTask> asyncTasks = new ConcurrentHashMap<>();
+    private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
     
     private LagoScheduler()
     {
@@ -26,12 +28,15 @@ public class LagoScheduler
     
     public void runSyncTasks()
     {
+        runOnceSyncRunnables.forEach(r -> r.run());
+        runOnceSyncRunnables.clear();
+        
         
     }
     
-    public int spawnTaskSync(Runnable r)
+    public void spawnRunOnceTaskSync(Runnable r)
     {
-        return 0;
+        runOnceSyncRunnables.add(r);
     }
     
     public int spawnWaitingAsyncTask(TaskBehaviorHandler handler)
