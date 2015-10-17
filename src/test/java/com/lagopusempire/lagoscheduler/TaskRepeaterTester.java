@@ -33,7 +33,7 @@ public class TaskRepeaterTester
     }
     
     @Test
-    public void testInterval()
+    public void testInfiniteRepeat()
     {
         TaskRepeater repeater = new TaskRepeater(0, 10, -1);
         for(int runs = 0; runs < 5; runs++)
