@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LagoScheduler implements TaskOperation
+public class LagoScheduler implements TaskOperation, Runnable
 {
     private static class InstanceHolder
     {
@@ -32,6 +32,13 @@ public class LagoScheduler implements TaskOperation
     private LagoScheduler()
     {
         
+    }
+    
+    @Override
+    public void run()
+    {
+        TaskOperationRepeater repeater = new TaskOperationRepeater(this, TICKS_PER_SECOND);
+        repeater.run();
     }
     
     @Override
