@@ -57,7 +57,7 @@ class Task implements TaskOperation
             this.repeatInstructions = repeatInstructions;
         }
         
-        handler.onStart();
+        this.handler.onStart();
     }
     
     public void stop()
