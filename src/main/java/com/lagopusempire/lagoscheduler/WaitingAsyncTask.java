@@ -48,49 +48,8 @@ final class WaitingAsyncTask extends Task implements Runnable
     }
     
     @Override
-    public void send(int i)
+    protected void onSend()
     {
-        super.send(i);
-        synchronized(lock)
-        {
-            lock.notify();
-        }
-    }
-    
-    @Override
-    void send(double d)
-    {
-        super.send(d);
-        synchronized(lock)
-        {
-            lock.notify();
-        }
-    }
-    
-    @Override
-    void send(String s)
-    {
-        super.send(s);
-        synchronized(lock)
-        {
-            lock.notify();
-        }
-    }
-    
-    @Override
-    void send(Boolean b)
-    {
-        super.send(b);
-        synchronized(lock)
-        {
-            lock.notify();
-        }
-    }
-    
-    @Override
-    void send()
-    {
-        super.send();
         synchronized(lock)
         {
             lock.notify();
