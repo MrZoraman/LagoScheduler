@@ -18,27 +18,27 @@ public class MainTest
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending int 24 to test task on thread " + getThreadId());
-                scheduler.send(tid, 24);
+                scheduler.sendAsync(tid, 24);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending double 3.141 to test task on thread " + getThreadId());
-                scheduler.send(tid, 3.141);
+                scheduler.sendAsync(tid, 3.141);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending string 'foomfah' to test task on thread " + getThreadId());
-                scheduler.send(tid, "foomfah");
+                scheduler.sendAsync(tid, "foomfah");
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending boolean false to test task on thread " + getThreadId());
-                scheduler.send(tid, false);
+                scheduler.sendAsync(tid, false);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending void to test task on thread " + getThreadId());
-                scheduler.send(tid);
+                scheduler.sendAsync(tid);
                 
                 System.out.println("executing runonce async thread (new thread) on thread " + getThreadId());
                 scheduler.spawnRunOnceAsyncTask(() -> System.out.println("Hello from new thread " + getThreadId()), true);
@@ -48,7 +48,7 @@ public class MainTest
                 scheduler.spawnRunOnceAsyncTask(() -> System.out.println("Hello from threadpool thread " + getThreadId()), true);
                 
                 System.out.println("stopping test task on thread " + getThreadId());
-                scheduler.stop(tid);
+                scheduler.stopAsync(tid);
             }
             catch (Exception ex)
             {
