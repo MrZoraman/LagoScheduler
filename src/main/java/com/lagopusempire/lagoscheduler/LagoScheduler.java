@@ -39,10 +39,12 @@ public class LagoScheduler
         
     }
     
-    public int spawnRepeatingSyncTask(TaskBehaviorHandler handler, int ticksPerInterval)
+    public int spwanWaitingSyncTask(TaskBehaviorHandler handler, int ticksPerInterval)
     {
         int tid = tids.getAndIncrement();
         
+        WaitingSyncTask task = new WaitingSyncTask(() -> tasks.remove(tid), handler);
+        tasks.put(tid, task);
         
         return tid;
     }
