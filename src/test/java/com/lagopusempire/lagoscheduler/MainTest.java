@@ -7,100 +7,77 @@ public class MainTest
         return Thread.currentThread().getId();
     }
     
-    public static void main(String[] args)
+    private static void printWithId(String message)
     {
-        LagoScheduler scheduler = LagoScheduler.getInstance();
-        final TestAsyncTask task = new TestAsyncTask();
-        final int tid = scheduler.spawnWaitingAsyncTask(task);
-        Thread t = new Thread(() -> {
-            try
-            {
-                System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
-                Thread.sleep(1000);
-                System.out.println("sending int 24 to test task on thread " + getThreadId());
-                scheduler.send(tid, 24);
-                
-                System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
-                Thread.sleep(1000);
-                System.out.println("sending double 3.141 to test task on thread " + getThreadId());
-                scheduler.send(tid, 3.141);
-                
-                System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
-                Thread.sleep(1000);
-                System.out.println("sending string 'foomfah' to test task on thread " + getThreadId());
-                scheduler.send(tid, "foomfah");
-                
-                System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
-                Thread.sleep(1000);
-                System.out.println("sending boolean false to test task on thread " + getThreadId());
-                scheduler.send(tid, false);
-                
-                System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
-                Thread.sleep(1000);
-                System.out.println("sending void to test task on thread " + getThreadId());
-                scheduler.send(tid);
-                
-                System.out.println("executing runonce async thread (new thread) on thread " + getThreadId());
-                scheduler.spawnRunOnceAsyncTask(() -> System.out.println("Hello from new thread " + getThreadId()), true);
-                
-                
-                System.out.println("executing runonce async thread (threadpool) on thread " + getThreadId());
-                scheduler.spawnRunOnceAsyncTask(() -> System.out.println("Hello from threadpool thread " + getThreadId()), true);
-                
-                System.out.println("stopping test task on thread " + getThreadId());
-                scheduler.stop(tid);
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        });
-        t.setDaemon(false);
-        t.start();
+        System.out.println("-[" + getThreadId() + "]- " + message + " -[" + getThreadId() + "]-");
     }
     
-    static class TestAsyncTask implements TaskBehaviorHandler
+    public static void main(String[] args)
     {
-        @Override
-        public void onStart()
+        printWithId("Hello from main thread!");
+        LagoScheduler scheduler = LagoScheduler.getInstance();
+        TaskRepeatInstructions repeatInstructions = new TaskRepeatInstructions(0, 20, -1);//once every second forever
+        scheduler.spawnAsyncTask(false, () -> {
+            printWithId("Hello from other thread!");
+            return true;
+        }, repeatInstructions);
+    }
+    
+    private class TaskBehaviorHandlerImpl
+    {
+        private final String name;
+        
+        public TaskBehaviorHandlerImpl(String name)
         {
-            System.out.println("Async task started on thread " + getThreadId());
+            this.name = name;
         }
         
-        @Override
-        public void onStop()
+        private <T> void notifyReceive(T[] stuff)
         {
-            System.out.println("Async task stopped on thread " + getThreadId());
+            for(int ii = 0; ii < stuff.length; ii++)
+            {
+                printWithId("recieved data! name=" + name + ", id=" + ii + ", data=" + stuff[ii].toString());
+            }
         }
         
-//        @Override
-//        public void onReceive(int i)
-//        {
-//            System.out.println("Received int " + i + " on thread " + getThreadId());
-//        }
-//        
-//        @Override
-//        public void onReceive(double d)
-//        {
-//            System.out.println("Received double " + d + " on thread " + getThreadId());
-//        }
-//        
-//        @Override
-//        public void onReceive(String s)
-//        {
-//            System.out.println("Received string '" + s + "' on thread " + getThreadId());
-//        }
-//        
-//        @Override
-//        public void onReceive(boolean b)
-//        {
-//            System.out.println("Received boolean " + b + " on thread " + getThreadId());
-//        }
-//        
-//        @Override
-//        public void onReceive()
-//        {
-//            System.out.println("Received void on thread " + getThreadId());
-//        }
+        void onReceive(Integer[] i)
+        {
+            notifyReceive(i);
+        }
+        
+        void onReceive(Double[] d)
+        {
+            notifyReceive(d);
+        }
+        
+        void onReceive(String[] s)
+        {
+            notifyReceive(s);
+        }
+        
+        void onReceive(Boolean[] b)
+        {
+            notifyReceive(b);
+        }
+        
+        void onReceive(Object[] o)
+        {
+            notifyReceive(o);
+        }
+        
+        void onReceive(int voids)
+        {
+            printWithId(voids + " voids received.");
+        }
+
+        void onStart()
+        {
+            printWithId("onStart");
+        }
+        
+        void onStop()
+        {
+            printWithId("onStop");
+        }
     }
 }
