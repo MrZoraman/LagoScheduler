@@ -103,15 +103,11 @@ class Task implements Runnable
         typeUpdated.clear();
     }
     
-    protected void onSend()
-    {
-    }
     
     void send(int i)
     {
         intBuffer.set(i);
         typeUpdated.add(Types.INT);
-        onSend();
     }
     
     void send(double d)
@@ -119,27 +115,23 @@ class Task implements Runnable
         long bits = Double.doubleToLongBits(d);
         doubleBuffer.set(bits);
         typeUpdated.add(Types.DOUBLE);
-        onSend();
     }
     
     void send(String s)
     {
         stringBuffer.set(s);
         typeUpdated.add(Types.STRING);
-        onSend();
     }
     
     void send(Boolean b)
     {
         booleanBuffer.set(b);
         typeUpdated.add(Types.BOOLEAN);
-        onSend();
     }
     
     void send()
     {
         typeUpdated.add(Types.VOID);
-        onSend();
     }
     
     public void setDone()
