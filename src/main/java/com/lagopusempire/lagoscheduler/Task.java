@@ -29,7 +29,15 @@ class Task implements TaskOperation
     Task(Runnable doneCallback, TaskBehaviorHandler handler, TaskOperation task, TaskRepeatInstructions repeatInstructions)
     {
         this.doneCallback = doneCallback;
-        this.handler = handler;
+        
+        if(handler == null)
+        {
+            this.handler = new TaskBehaviorHandler(){};
+        }
+        else
+        {
+            this.handler = handler;
+        }
         
         if(task == null)
         {
