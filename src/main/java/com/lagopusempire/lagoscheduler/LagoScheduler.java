@@ -4,9 +4,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LagoScheduler
+public class LagoScheduler implements TaskOperation
 {
     private static class InstanceHolder
     {
@@ -20,6 +21,8 @@ public class LagoScheduler
     
     private static final int THREAD_POOL_SIZE = 16;
     
+    private final AtomicBoolean done = new AtomicBoolean(false);
+    
     private final AtomicInteger tids = new AtomicInteger(0);
     private final ConcurrentMap<Integer, Task> tasks = new ConcurrentHashMap<>();
     //private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
@@ -31,14 +34,16 @@ public class LagoScheduler
         
     }
     
+    @Override
+    public boolean doTask()
+    {
+        syncTasks.values().forEach(task -> task.run());
+        return done.get();
+    }
+    
     public void runSyncTasks()
     {
-        //runOnceSyncRunnables.forEach(r -> r.run());
-        //runOnceSyncRunnables.clear();
-        
-        syncTasks.values().forEach(task -> task.run());
-        
-        
+        doTask();
     }
     
     public int spawnSyncTask(TaskBehaviorHandler handler, Runnable toDo, TaskRepeatInstructions repeatInstructions)
