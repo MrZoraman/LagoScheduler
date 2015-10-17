@@ -56,6 +56,7 @@ public class LagoScheduler implements TaskOperation, Runnable
     public void stop()
     {
         done.set(true);
+        tasks.values().forEach(task -> task.stop());
     }
     
     public int spawnSyncTask(TaskBehaviorHandler handler, TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
