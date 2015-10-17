@@ -68,6 +68,31 @@ public class LagoScheduler implements TaskOperation, Runnable
         return tid;
     }
     
+    public int spawnSyncTask(TaskBehaviorHandler handler, TaskOperation toDo)
+    {
+        return spawnSyncTask(handler, toDo, null);
+    }
+    
+    public int spawnSyncTask(TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
+    {
+        return spawnSyncTask(null, toDo, repeatInstructions);
+    }
+    
+    public int spawnSyncTask(TaskBehaviorHandler handler, TaskRepeatInstructions repeatInstructions)
+    {
+        return spawnSyncTask(handler, null, repeatInstructions);
+    }
+    
+    public int spawnSyncTask(TaskBehaviorHandler handler)
+    {
+        return spawnSyncTask(handler, null, null);
+    }
+    
+    public int spawnSyncTask(TaskOperation toDo)
+    {
+        return spawnSyncTask(null, toDo, null);
+    }
+    
     public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
     {
         int tid = tids.getAndIncrement();
@@ -92,6 +117,31 @@ public class LagoScheduler implements TaskOperation, Runnable
         }
         
         return tid;
+    }
+    
+    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, TaskOperation toDo)
+    {
+        return spawnAsyncTask(threadPool, handler, toDo, null);
+    }
+    
+    public int spawnAsyncTask(boolean threadPool, TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
+    {
+        return spawnAsyncTask(threadPool, null, toDo, repeatInstructions);
+    }
+    
+    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, TaskRepeatInstructions repeatInstructions)
+    {
+        return spawnAsyncTask(threadPool, handler, null, repeatInstructions);
+    }
+    
+    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler)
+    {
+        return spawnAsyncTask(threadPool, handler, null, null);
+    }
+    
+    public int spawnAsyncTask(boolean threadPool, TaskOperation toDo)
+    {
+        return spawnAsyncTask(threadPool, null, toDo, null);
     }
     
     public boolean stop(int tid)
