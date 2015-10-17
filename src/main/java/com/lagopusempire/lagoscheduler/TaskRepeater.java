@@ -39,7 +39,7 @@ public class TaskRepeater
             return;
         }
         
-        if(timesRun >= repeats)
+        if(repeats > 0 && timesRun >= repeats)
         {
             shouldRun = false;
         }
@@ -47,7 +47,7 @@ public class TaskRepeater
         {
             shouldRun = true;
             timesRun++;
-            if(timesRun >= repeats)
+            if(repeats > 0 && timesRun >= repeats)
             {
                 willRunAgain = false;
             }
