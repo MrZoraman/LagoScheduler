@@ -18,20 +18,18 @@ public final class WaitingAsyncTask implements Runnable
     private final Object lock = new Object();
     
     private final Runnable doneCallback;
-    private final DataReceiveHandler dataHandler;
-    private final TaskLifeHandler lifeHandler;
+    private final TaskBehaviorHandler handler;
     
-    WaitingAsyncTask(Runnable doneCallback, DataReceiveHandler dataHandler, TaskLifeHandler lifeHandler)
+    WaitingAsyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
     {
         this.doneCallback = doneCallback;
-        this.dataHandler = dataHandler;
-        this.lifeHandler = lifeHandler;
+        this.handler = handler;
     }
     
     @Override
     public void run()
     {
-        lifeHandler.onStart();
+        handler.onStart();
         while(true)
         {
             synchronized(lock)
@@ -47,7 +45,7 @@ public final class WaitingAsyncTask implements Runnable
             }
             if(done.get())
             {
-                lifeHandler.onStop();
+                handler.onStop();
                 break;
             }
             
@@ -55,20 +53,20 @@ public final class WaitingAsyncTask implements Runnable
             switch(type)
             {
                 case INT:
-                    dataHandler.onReceive(intBuffer.get());
+                    handler.onReceive(intBuffer.get());
                     break;
                 case DOUBLE:
                     double d = Double.longBitsToDouble(doubleBuffer.get());
-                    dataHandler.onReceive(d);
+                    handler.onReceive(d);
                     break;
                 case STRING:
-                    dataHandler.onReceive(stringBuffer.get());
+                    handler.onReceive(stringBuffer.get());
                     break;
                 case BOOLEAN:
-                    dataHandler.onReceive(booleanBuffer.get());
+                    handler.onReceive(booleanBuffer.get());
                     break;
                 case VOID:
-                    dataHandler.onReceive();
+                    handler.onReceive();
                     break;
             }
         }

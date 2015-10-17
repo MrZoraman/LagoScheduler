@@ -54,7 +54,7 @@ public class MainTest
         t.start();
     }
     
-    static class TestAsyncTask implements GeneralTaskHandler
+    static class TestAsyncTask implements TaskBehaviorHandler
     {
         @Override
         public void onStart()
