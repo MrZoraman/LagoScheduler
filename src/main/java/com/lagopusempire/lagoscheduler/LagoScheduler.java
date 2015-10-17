@@ -80,7 +80,7 @@ public class LagoScheduler
     {
         final int tid = tids.getAndIncrement();
         
-        WaitingAsyncTask task = new WaitingAsyncTask(() -> tasks.remove(tid), handler);
+        AsyncTask task = new AsyncTask(() -> tasks.remove(tid), handler);
         tasks.put(tid, task);
         
         Thread thread = new Thread(task);

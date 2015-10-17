@@ -1,10 +1,10 @@
 package com.lagopusempire.lagoscheduler;
 
-final class WaitingAsyncTask extends Task implements Runnable
+final class AsyncTask extends Task implements Runnable
 {
     private final Object lock = new Object();
     
-    public WaitingAsyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
+    public AsyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
     {
         super(doneCallback, handler);
     }
