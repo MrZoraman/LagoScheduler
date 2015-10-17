@@ -83,11 +83,6 @@ public class LagoScheduler implements TaskOperation, Runnable
         return spawnSyncTask(handler, null, repeatInstructions);
     }
     
-    public int spawnSyncTask(TaskBehaviorHandler handler)
-    {
-        return spawnSyncTask(handler, null, null);
-    }
-    
     public int spawnSyncTask(TaskOperation toDo)
     {
         return spawnSyncTask(null, toDo, null);
@@ -132,11 +127,6 @@ public class LagoScheduler implements TaskOperation, Runnable
     public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, TaskRepeatInstructions repeatInstructions)
     {
         return spawnAsyncTask(threadPool, handler, null, repeatInstructions);
-    }
-    
-    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler)
-    {
-        return spawnAsyncTask(threadPool, handler, null, null);
     }
     
     public int spawnAsyncTask(boolean threadPool, TaskOperation toDo)
