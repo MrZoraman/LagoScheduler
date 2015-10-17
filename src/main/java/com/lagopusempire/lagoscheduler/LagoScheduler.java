@@ -2,7 +2,6 @@ package com.lagopusempire.lagoscheduler;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,7 +24,7 @@ public class LagoScheduler
     private final ConcurrentMap<Integer, Task> tasks = new ConcurrentHashMap<>();
     //private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
     private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-    private final ConcurrentMap<Integer, SyncTask> syncTasks = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Task> syncTasks = new ConcurrentHashMap<>();
     
     private LagoScheduler()
     {
@@ -46,7 +45,7 @@ public class LagoScheduler
     {
         int tid = tids.getAndIncrement();
         
-        SyncTask task = new SyncTask(() -> {
+        Task task = new Task(() -> {
             tasks.remove(tid);
             syncTasks.remove(tid);
         }, handler, toDo, repeatInstructions);
@@ -61,7 +60,7 @@ public class LagoScheduler
     {
         int tid = tids.getAndIncrement();
         
-        AsyncTask task = new AsyncTask(() -> {
+        Task task = new Task(() -> {
             tasks.remove(tid);
         }, handler, toDo, repeatInstructions);
         
@@ -104,7 +103,7 @@ public class LagoScheduler
     {
         final int tid = tids.getAndIncrement();
         
-        AsyncTask task = new AsyncTask(() -> tasks.remove(tid), handler, null, null);
+        Task task = new Task(() -> tasks.remove(tid), handler, null, null);
         tasks.put(tid, task);
         
 //        Thread thread = new Thread(task);

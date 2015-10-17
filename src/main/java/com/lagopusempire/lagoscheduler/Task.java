@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-abstract class Task
+class Task
 {
     private enum Types { INT, DOUBLE, STRING, BOOLEAN, VOID };
     
@@ -48,6 +48,8 @@ abstract class Task
         {
             this.repeatInstructions = repeatInstructions;
         }
+        
+        handler.onStart();
     }
     
     public void stop()
@@ -57,6 +59,8 @@ abstract class Task
     
     public void tick()
     {
+        notifyHandlerMethods();
+        
         repeatInstructions.cycle();
         if(repeatInstructions.shouldRun())
         {
@@ -151,6 +155,7 @@ abstract class Task
     public void setDone()
     {
         done.set(true);
+        handler.onStop();
     }
     
     public boolean isDone()
