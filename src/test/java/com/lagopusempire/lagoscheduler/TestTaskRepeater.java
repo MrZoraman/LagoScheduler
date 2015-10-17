@@ -3,7 +3,7 @@ package com.lagopusempire.lagoscheduler;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TaskRepeaterTester
+public class TestTaskRepeater
 {
     @Test
     public void testRunOnce()
