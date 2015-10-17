@@ -40,8 +40,13 @@ public class MainTest
                 System.out.println("sending void to test task on thread " + getThreadId());
                 scheduler.send(tid);
                 
-                System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
-                Thread.sleep(1000);
+                System.out.println("executing runonce async thread (new thread) on thread " + getThreadId());
+                scheduler.spawnRunOnceAsyncTask(() -> System.out.println("Hello from new thread " + getThreadId()), true);
+                
+                
+                System.out.println("executing runonce async thread (threadpool) on thread " + getThreadId());
+                scheduler.spawnRunOnceAsyncTask(() -> System.out.println("Hello from threadpool thread " + getThreadId()), true);
+                
                 System.out.println("stopping test task on thread " + getThreadId());
                 scheduler.stop(tid);
             }
