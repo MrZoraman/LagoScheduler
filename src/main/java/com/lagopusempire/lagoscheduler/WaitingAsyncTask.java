@@ -12,7 +12,7 @@ final class WaitingAsyncTask extends Task implements Runnable
     @Override
     public void run()
     {
-        handler.onStart();
+        started();
         while(true)
         {
             synchronized(lock)
@@ -34,7 +34,6 @@ final class WaitingAsyncTask extends Task implements Runnable
             
             notifyHandlerMethods();
         }
-        handler.onStop();
         finished();
     }
     

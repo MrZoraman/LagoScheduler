@@ -21,7 +21,7 @@ abstract class Task
     private final CopyOnWriteArraySet<Types> typeUpdated = new CopyOnWriteArraySet<>();
     
     private final Runnable doneCallback;
-    protected final TaskBehaviorHandler handler;
+    private final TaskBehaviorHandler handler;
     
     Task(Runnable doneCallback, TaskBehaviorHandler handler)
     {
@@ -67,8 +67,14 @@ abstract class Task
         typeUpdated.clear();
     }
     
+    protected void started()
+    {
+        handler.onStart();
+    }
+    
     protected void finished()
     {
+        handler.onStop();
         doneCallback.run();
     }
     
