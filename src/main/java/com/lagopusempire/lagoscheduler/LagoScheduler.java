@@ -99,6 +99,16 @@ public class LagoScheduler implements TaskOperation, Runnable
         return spawnSyncTask(null, toDo, null);
     }
     
+    public int spawnSyncTask(TaskBehaviorHandler handler, Runnable runnable)
+    {
+        return spawnSyncTask(handler, new TaskOperationWrapper(runnable), TaskRepeatInstructions.FOREVER());
+    }
+    
+    public int spawnSyncTask(Runnable runnable)
+    {
+        return spawnSyncTask(null, new TaskOperationWrapper(runnable), TaskRepeatInstructions.FOREVER());
+    }
+    
     public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
     {
         int tid = tids.getAndIncrement();
@@ -148,6 +158,16 @@ public class LagoScheduler implements TaskOperation, Runnable
     public int spawnAsyncTask(boolean threadPool, TaskOperation toDo)
     {
         return spawnAsyncTask(threadPool, null, toDo, null);
+    }
+    
+    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, Runnable runnable)
+    {
+        return spawnAsyncTask(threadPool, handler, new TaskOperationWrapper(runnable), TaskRepeatInstructions.FOREVER());
+    }
+    
+    public int spawnAsyncTask(boolean threadPool, Runnable runnable)
+    {
+        return spawnAsyncTask(threadPool, null, new TaskOperationWrapper(runnable), TaskRepeatInstructions.FOREVER());
     }
     
     public boolean stop(int tid)
