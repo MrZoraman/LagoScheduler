@@ -38,7 +38,7 @@ public class AsyncTask implements Runnable
                 {
                     lock.wait();
                 }
-                catch (InterruptedException ex)
+                catch (InterruptedException ignored)
                 {
                     done.set(true);
                 }
