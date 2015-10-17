@@ -25,6 +25,7 @@ class SyncTask extends Task
         {
             this.repeatInstructions = repeatInstructions;
         }
+        started();
     }
     
     @Override
@@ -42,5 +43,12 @@ class SyncTask extends Task
         {
             setDone();
         }
+    }
+    
+    @Override
+    public void setDone()
+    {
+        super.setDone();
+        finished();
     }
 }

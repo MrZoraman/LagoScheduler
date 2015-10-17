@@ -117,12 +117,12 @@ abstract class Task
         onSend();
     }
     
-    public final void setDone()
+    public void setDone()
     {
         done.set(true);
     }
     
-    public final boolean isDone()
+    public boolean isDone()
     {
         return done.get();
     }
