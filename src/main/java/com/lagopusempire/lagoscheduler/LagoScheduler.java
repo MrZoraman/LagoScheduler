@@ -24,7 +24,7 @@ public class LagoScheduler
     private final AtomicInteger tids = new AtomicInteger(0);
     private final ConcurrentMap<Integer, Task> tasks = new ConcurrentHashMap<>();
     //private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
-    private final ExecutorService runOnceAsyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+    private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     private final ConcurrentMap<Integer, SyncTask> syncTasks = new ConcurrentHashMap<>();
     
     private LagoScheduler()
@@ -57,6 +57,30 @@ public class LagoScheduler
         return tid;
     }
     
+    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, Runnable toDo, TaskRepeatInstructions repeatInstructions)
+    {
+        int tid = tids.getAndIncrement();
+        
+        AsyncTask task = new AsyncTask(() -> {
+            tasks.remove(tid);
+        }, handler, toDo, repeatInstructions);
+        
+        tasks.put(tid, task);
+        
+        if(threadPool)
+        {
+            asyncExecutor.execute(task);
+        }
+        else
+        {
+            Thread t = new Thread(task);
+            t.setDaemon(false);
+            t.start();
+        }
+        
+        return tid;
+    }
+    
     public void spawnRunOnceAsyncTask(Runnable r, boolean spawnThread)
     {
         if(spawnThread)
@@ -67,7 +91,7 @@ public class LagoScheduler
         }
         else
         {
-            runOnceAsyncExecutor.execute(r);
+            asyncExecutor.execute(r);
         }
     }
     
