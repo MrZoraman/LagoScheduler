@@ -9,6 +9,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 abstract class Task
 {
+    private enum Types { INT, DOUBLE, STRING, BOOLEAN, VOID };
+    
     private final AtomicBoolean done = new AtomicBoolean(false);
     
     private final AtomicInteger intBuffer = new AtomicInteger(0);
