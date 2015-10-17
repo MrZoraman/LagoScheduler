@@ -1,29 +1,16 @@
 package com.lagopusempire.lagoscheduler;
 
-import java.util.concurrent.atomic.*;
+import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-final class WaitingAsyncTask implements Runnable
+final class WaitingAsyncTask extends Task
 {
-    private enum Types {INT, DOUBLE, STRING, BOOLEAN, VOID};
-    
+    private final Object lock = new Object();
     private final AtomicBoolean done = new AtomicBoolean(false);
     
-    private final AtomicInteger intBuffer = new AtomicInteger(0);
-    private final AtomicLong doubleBuffer = new AtomicLong(0);
-    private final AtomicReference<String> stringBuffer = new AtomicReference<>();
-    private final AtomicBoolean booleanBuffer = new AtomicBoolean(false);
-    
-    private final AtomicReference<Types> typeUpdated = new AtomicReference<>();
-    
-    private final Object lock = new Object();
-    
-    private final Runnable doneCallback;
-    private final TaskBehaviorHandler handler;
-    
-    WaitingAsyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
+    public WaitingAsyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
     {
-        this.doneCallback = doneCallback;
-        this.handler = handler;
+        super(doneCallback, handler);
     }
     
     @Override
@@ -49,31 +36,38 @@ final class WaitingAsyncTask implements Runnable
                 break;
             }
             
-            final Types type = typeUpdated.get();
-            switch(type)
+            final Iterator<Types> it = typeUpdated.iterator();
+            while(it.hasNext())
             {
-                case INT:
-                    handler.onReceive(intBuffer.get());
-                    break;
-                case DOUBLE:
-                    double d = Double.longBitsToDouble(doubleBuffer.get());
-                    handler.onReceive(d);
-                    break;
-                case STRING:
-                    handler.onReceive(stringBuffer.get());
-                    break;
-                case BOOLEAN:
-                    handler.onReceive(booleanBuffer.get());
-                    break;
-                case VOID:
-                    handler.onReceive();
-                    break;
+                Types type = it.next();
+                switch(type)
+                {
+                    case INT:
+                        handler.onReceive(intBuffer.get());
+                        break;
+                    case DOUBLE:
+                        double d = Double.longBitsToDouble(doubleBuffer.get());
+                        handler.onReceive(d);
+                        break;
+                    case STRING:
+                        handler.onReceive(stringBuffer.get());
+                        break;
+                    case BOOLEAN:
+                        handler.onReceive(booleanBuffer.get());
+                        break;
+                    case VOID:
+                        handler.onReceive();
+                        break;
+                }
             }
+            
+            resetTypeUpdated();
         }
         doneCallback.run();
     }
     
-    void stop()
+    @Override
+    public void stop()
     {
         done.set(true);
         synchronized(lock)
@@ -82,50 +76,50 @@ final class WaitingAsyncTask implements Runnable
         }
     }
     
-    void send(int i)
+    @Override
+    public void send(int i)
     {
-        intBuffer.set(i);
-        typeUpdated.set(Types.INT);
+        super.send(i);
         synchronized(lock)
         {
             lock.notify();
         }
     }
     
+    @Override
     void send(double d)
     {
-        long bits = Double.doubleToLongBits(d);
-        doubleBuffer.set(bits);
-        typeUpdated.set(Types.DOUBLE);
+        super.send(d);
         synchronized(lock)
         {
             lock.notify();
         }
     }
     
+    @Override
     void send(String s)
     {
-        stringBuffer.set(s);
-        typeUpdated.set(Types.STRING);
+        super.send(s);
         synchronized(lock)
         {
             lock.notify();
         }
     }
     
+    @Override
     void send(Boolean b)
     {
-        booleanBuffer.set(b);
-        typeUpdated.set(Types.BOOLEAN);
+        super.send(b);
         synchronized(lock)
         {
             lock.notify();
         }
     }
     
+    @Override
     void send()
     {
-        typeUpdated.set(Types.VOID);
+        super.send();
         synchronized(lock)
         {
             lock.notify();
