@@ -19,10 +19,12 @@ public class LagoScheduler
         return InstanceHolder.INSTANCE;
     }
     
+    private static final int THREAD_POOL_SIZE = 16;
+    
     private final AtomicInteger tids = new AtomicInteger(0);
     private final ConcurrentMap<Integer, WaitingAsyncTask> asyncTasks = new ConcurrentHashMap<>();
     private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
-    private final ExecutorService runOnceAsyncExecutor = Executors.newFixedThreadPool(16);
+    private final ExecutorService runOnceAsyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     
     private LagoScheduler()
     {
