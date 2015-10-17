@@ -8,7 +8,14 @@ class SyncTask extends Task
     public SyncTask(Runnable doneCallback, TaskBehaviorHandler handler, Runnable task, TaskRepeatInstructions repeatInstructions)
     {
         super(doneCallback, handler);
-        this.task = task;
+        if(task == null)
+        {
+            this.task = () -> { };
+        }
+        else
+        {
+            this.task = task;
+        }
         this.repeatInstructions = repeatInstructions;
     }
     
