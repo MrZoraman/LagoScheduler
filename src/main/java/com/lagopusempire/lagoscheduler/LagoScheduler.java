@@ -20,12 +20,12 @@ public class LagoScheduler implements TaskOperation
     }
     
     private static final int THREAD_POOL_SIZE = 16;
+    private static final int TICKS_PER_SECOND = 20;
     
     private final AtomicBoolean done = new AtomicBoolean(false);
     
     private final AtomicInteger tids = new AtomicInteger(0);
     private final ConcurrentMap<Integer, Task> tasks = new ConcurrentHashMap<>();
-    //private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
     private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     private final ConcurrentMap<Integer, Task> syncTasks = new ConcurrentHashMap<>();
     
@@ -71,16 +71,18 @@ public class LagoScheduler implements TaskOperation
         
         tasks.put(tid, task);
         
-//        if(threadPool)
-//        {
-//            asyncExecutor.execute(task);
-//        }
-//        else
-//        {
-//            Thread t = new Thread(task);
-//            t.setDaemon(false);
-//            t.start();
-//        }
+        TaskOperationRepeater taskRepeater = new TaskOperationRepeater(task, TICKS_PER_SECOND);
+        
+        if(threadPool)
+        {
+            asyncExecutor.execute(taskRepeater);
+        }
+        else
+        {
+            Thread t = new Thread(taskRepeater);
+            t.setDaemon(false);
+            t.start();
+        }
         
         return tid;
     }
@@ -111,9 +113,11 @@ public class LagoScheduler implements TaskOperation
         Task task = new Task(() -> tasks.remove(tid), handler, null, null);
         tasks.put(tid, task);
         
-//        Thread thread = new Thread(task);
-//        thread.setDaemon(false);
-//        thread.start();
+        TaskOperationRepeater taskRepeater = new TaskOperationRepeater(task, TICKS_PER_SECOND);
+        
+        Thread thread = new Thread(taskRepeater);
+        thread.setDaemon(false);
+        thread.start();
         
         return tid;
     }
