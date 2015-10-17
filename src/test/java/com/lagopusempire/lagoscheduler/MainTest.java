@@ -19,8 +19,9 @@ public class MainTest
         TaskRepeatInstructions repeatInstructions = new TaskRepeatInstructions(0, 20, -1);//once every second forever
         scheduler.spawnAsyncTask(false, () -> {
             printWithId("Hello from other thread!");
-            return true;
+            return false;
         }, repeatInstructions);
+        scheduler.run();
     }
     
     private class TaskBehaviorHandlerImpl
