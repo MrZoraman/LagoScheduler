@@ -9,27 +9,37 @@ public class TaskRepeater
     private int tick = 0;
     private int timesRun = 0;
     private boolean willRunAgain = true;
+    private boolean delayOver;
     
     private boolean shouldRun = false;
     
     public TaskRepeater(int delay, int interval, int repeats)
     {
         this.delay = delay;
+        this.delayOver = delay <= 0;
         this.interval = interval;
         this.repeats = repeats;
     }
     
     public void cycle()
     {
-        if(tick < delay)
+        tick++;
+        
+        if(!delayOver)
         {
-            shouldRun = false;
+            if(tick < delay)
+            {
+                shouldRun = false;
+            }
+            else
+            {
+                delayOver = true;
+                tick = 0;
+            }
             return;
         }
         
-        tick++;
-        
-        if(repeats > 0 && repeats > timesRun)
+        if(repeats >= 0 && repeats < timesRun)
         {
             shouldRun = false;
             willRunAgain = false;

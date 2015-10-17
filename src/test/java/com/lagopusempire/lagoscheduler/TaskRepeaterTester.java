@@ -19,8 +19,8 @@ public class TaskRepeaterTester
     @Test
     public void testDelay()
     {
-        TaskRepeater repeater = new TaskRepeater(10, 0, 0);
-        for(int ii = 0; ii < 9; ii++)
+        TaskRepeater repeater = new TaskRepeater(4, 1, 0);
+        for(int ii = 0; ii < 4; ii++)
         {
             repeater.cycle();
         }
