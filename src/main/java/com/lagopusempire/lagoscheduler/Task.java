@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-class Task implements Runnable
+class Task implements TaskOperation
 {
     private enum Types { INT, DOUBLE, STRING, BOOLEAN, VOID };
     
@@ -23,17 +23,17 @@ class Task implements Runnable
     private final Runnable doneCallback;
     private final TaskBehaviorHandler handler;
     
-    private final Runnable task;
+    private final TaskOperation task;
     private final TaskRepeatInstructions repeatInstructions;
     
-    Task(Runnable doneCallback, TaskBehaviorHandler handler, Runnable task, TaskRepeatInstructions repeatInstructions)
+    Task(Runnable doneCallback, TaskBehaviorHandler handler, TaskOperation task, TaskRepeatInstructions repeatInstructions)
     {
         this.doneCallback = doneCallback;
         this.handler = handler;
         
         if(task == null)
         {
-            this.task = () -> { };
+            this.task = () -> {return false;};
         }
         else
         {
@@ -54,24 +54,39 @@ class Task implements Runnable
     
     public void stop()
     {
-        setDone();
+        handler.onStop();
+        doneCallback.run();
+        done.set(true);
     }
     
     @Override
-    public void run()
+    public boolean doTask()
     {
+        if(done.get())
+        {
+            return true;
+        }
+        
         notifyHandlerMethods();
         
         repeatInstructions.cycle();
         if(repeatInstructions.shouldRun())
         {
-            task.run();
+            boolean result = task.doTask();
+            if(result)
+            {
+                stop();
+                return true;
+            }
         }
         
         if(!repeatInstructions.willRunAgain())
         {
-            setDone();
+            stop();
+            return true;
         }
+        
+        return false;
     }
     
     private void notifyHandlerMethods()
@@ -131,17 +146,5 @@ class Task implements Runnable
     void send()
     {
         typeUpdated.add(Types.VOID);
-    }
-    
-    public void setDone()
-    {
-        done.set(true);
-        handler.onStop();
-        doneCallback.run();
-    }
-    
-    public boolean isDone()
-    {
-        return done.get();
     }
 }

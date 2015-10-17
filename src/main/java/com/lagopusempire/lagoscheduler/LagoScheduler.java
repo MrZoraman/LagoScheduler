@@ -37,7 +37,7 @@ public class LagoScheduler implements TaskOperation
     @Override
     public boolean doTask()
     {
-        syncTasks.values().forEach(task -> task.run());
+        syncTasks.values().forEach(task -> task.doTask());
         return done.get();
     }
     
@@ -46,7 +46,7 @@ public class LagoScheduler implements TaskOperation
         doTask();
     }
     
-    public int spawnSyncTask(TaskBehaviorHandler handler, Runnable toDo, TaskRepeatInstructions repeatInstructions)
+    public int spawnSyncTask(TaskBehaviorHandler handler, TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
     {
         int tid = tids.getAndIncrement();
         
@@ -61,7 +61,7 @@ public class LagoScheduler implements TaskOperation
         return tid;
     }
     
-    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, Runnable toDo, TaskRepeatInstructions repeatInstructions)
+    public int spawnAsyncTask(boolean threadPool, TaskBehaviorHandler handler, TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
     {
         int tid = tids.getAndIncrement();
         
@@ -71,16 +71,16 @@ public class LagoScheduler implements TaskOperation
         
         tasks.put(tid, task);
         
-        if(threadPool)
-        {
-            asyncExecutor.execute(task);
-        }
-        else
-        {
-            Thread t = new Thread(task);
-            t.setDaemon(false);
-            t.start();
-        }
+//        if(threadPool)
+//        {
+//            asyncExecutor.execute(task);
+//        }
+//        else
+//        {
+//            Thread t = new Thread(task);
+//            t.setDaemon(false);
+//            t.start();
+//        }
         
         return tid;
     }
@@ -111,9 +111,9 @@ public class LagoScheduler implements TaskOperation
         Task task = new Task(() -> tasks.remove(tid), handler, null, null);
         tasks.put(tid, task);
         
-        Thread thread = new Thread(task);
-        thread.setDaemon(false);
-        thread.start();
+//        Thread thread = new Thread(task);
+//        thread.setDaemon(false);
+//        thread.start();
         
         return tid;
     }
