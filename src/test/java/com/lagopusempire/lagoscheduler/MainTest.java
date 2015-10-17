@@ -41,7 +41,7 @@ public class MainTest
         scheduler.run();
     }
     
-    private static class TaskBehaviorHandlerImpl implements TaskBehaviorHandler
+    private static class TaskBehaviorHandlerImpl extends TaskBehaviorHandler
     {
         private final String name;
         

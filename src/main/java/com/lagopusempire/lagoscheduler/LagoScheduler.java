@@ -68,6 +68,11 @@ public class LagoScheduler implements TaskOperation, Runnable
             syncTasks.remove(tid);
         }, handler, toDo, repeatInstructions);
         
+        if(handler != null)
+        {
+            handler.setTid(tid);
+        }
+        
         tasks.put(tid, task);
         syncTasks.put(tid, task);
         
@@ -101,6 +106,11 @@ public class LagoScheduler implements TaskOperation, Runnable
         Task task = new Task(() -> {
             tasks.remove(tid);
         }, handler, toDo, repeatInstructions);
+        
+        if(handler != null)
+        {
+            handler.setTid(tid);
+        }
         
         tasks.put(tid, task);
         

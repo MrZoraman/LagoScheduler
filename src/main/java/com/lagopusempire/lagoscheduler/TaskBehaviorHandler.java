@@ -1,14 +1,33 @@
 package com.lagopusempire.lagoscheduler;
 
-public interface TaskBehaviorHandler
+import java.util.concurrent.atomic.AtomicInteger;
+
+public abstract class TaskBehaviorHandler
 {
-    default void onReceive(int i) { }
-    default void onReceive(double d) { }
-    default void onReceive(String s) { }
-    default void onReceive(boolean b) { }
-    default void onReceive(Object o) { }
-    default void onReceive() { }
+    private AtomicInteger tid = new AtomicInteger();
     
-    default void onStart() { }
-    default void onStop() { }
+    void setTid(int id)
+    {
+        tid.set(id);
+    }
+    
+    protected final int getTid()
+    {
+        return tid.get();
+    }
+    
+    public final void stop()
+    {
+        LagoScheduler.getInstance().stop(getTid());
+    }
+    
+    protected void onReceive(int i) { }
+    protected void onReceive(double d) { }
+    protected void onReceive(String s) { }
+    protected void onReceive(boolean b) { }
+    protected void onReceive(Object o) { }
+    protected void onReceive() { }
+    
+    protected void onStart() { }
+    protected void onStop() { }
 }
