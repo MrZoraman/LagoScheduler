@@ -39,6 +39,14 @@ public class LagoScheduler
         
     }
     
+    public int spawnRepeatingSyncTask(TaskBehaviorHandler handler, int ticksPerInterval)
+    {
+        int tid = tids.getAndIncrement();
+        
+        
+        return tid;
+    }
+    
     public void spawnRunOnceAsyncTask(Runnable r, boolean spawnThread)
     {
         if(spawnThread)
