@@ -33,7 +33,7 @@ final class WaitingAsyncTask extends Task implements Runnable
             }
             
             notifyHandlerMethods();
-        }
+        }// while true
         finished();
     }
     
