@@ -34,11 +34,11 @@ public class LagoScheduler
         return 0;
     }
     
-    public int spawnWaitingAsyncTask(DataReceiveHandler handler)
+    public int spawnWaitingAsyncTask(DataReceiveHandler datahandler, TaskLifeHandler lifeHandler)
     {
         final int tid = tids.getAndIncrement();
         
-        WaitingAsyncTask task = new WaitingAsyncTask(() -> asyncTasks.remove(tid), handler);
+        WaitingAsyncTask task = new WaitingAsyncTask(() -> asyncTasks.remove(tid), datahandler, lifeHandler);
         asyncTasks.put(tid, task);
         
         Thread thread = new Thread(task);
@@ -46,6 +46,11 @@ public class LagoScheduler
         thread.start();
         
         return tid;
+    }
+    
+    public int spawnWaitingAsyncTask(GeneralTaskHandler handler)
+    {
+        return spawnWaitingAsyncTask(handler, handler);
     }
     
     public boolean stop(int tid)

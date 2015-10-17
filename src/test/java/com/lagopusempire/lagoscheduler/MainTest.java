@@ -54,7 +54,7 @@ public class MainTest
         t.start();
     }
     
-    static class TestAsyncTask implements DataReceiveHandler
+    static class TestAsyncTask implements GeneralTaskHandler
     {
         @Override
         public void onStart()
