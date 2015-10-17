@@ -2,7 +2,7 @@ package com.lagopusempire.lagoscheduler;
 
 import java.util.concurrent.atomic.*;
 
-public final class AsyncTask implements Runnable
+public final class WaitingAsyncTask implements Runnable
 {
     private enum Types {INT, DOUBLE, STRING, BOOLEAN, VOID};
     
@@ -20,7 +20,7 @@ public final class AsyncTask implements Runnable
     private final Runnable doneCallback;
     private final AsyncTaskMessageHandler handler;
     
-    AsyncTask(Runnable doneCallback, AsyncTaskMessageHandler handler)
+    WaitingAsyncTask(Runnable doneCallback, AsyncTaskMessageHandler handler)
     {
         this.doneCallback = doneCallback;
         this.handler = handler;
