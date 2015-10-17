@@ -17,8 +17,8 @@ public class TaskRepeater
     {
         this.delay = delay;
         this.delayOver = delay <= 0;
-        this.interval = interval;
-        this.repeats = repeats;
+        this.interval = interval == 0 ? 1 : interval;
+        this.repeats = repeats == 0 ? 1 : repeats;
     }
     
     public void cycle()

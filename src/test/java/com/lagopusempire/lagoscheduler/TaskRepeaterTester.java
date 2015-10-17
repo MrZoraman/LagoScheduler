@@ -33,6 +33,22 @@ public class TaskRepeaterTester
     }
     
     @Test
+    public void testDelay_alt_args()
+    {
+        TaskRepeater repeater = new TaskRepeater(4, 0, 0);
+        for(int ii = 0; ii < 4; ii++)
+        {
+            repeater.cycle();
+        }
+        assertEquals(false, repeater.shouldRun());
+        repeater.cycle();
+        assertEquals(true, repeater.shouldRun());
+        repeater.cycle();
+        assertEquals(false, repeater.shouldRun());
+        assertEquals(false, repeater.willRunAgain());
+    }
+    
+    @Test
     public void testInfiniteRepeat()
     {
         TaskRepeater repeater = new TaskRepeater(0, 10, -1);
