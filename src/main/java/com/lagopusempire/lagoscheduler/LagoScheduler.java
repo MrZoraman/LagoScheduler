@@ -67,16 +67,16 @@ public class LagoScheduler
         
         tasks.put(tid, task);
         
-        if(threadPool)
-        {
-            asyncExecutor.execute(task);
-        }
-        else
-        {
-            Thread t = new Thread(task);
-            t.setDaemon(false);
-            t.start();
-        }
+//        if(threadPool)
+//        {
+//            asyncExecutor.execute(task);
+//        }
+//        else
+//        {
+//            Thread t = new Thread(task);
+//            t.setDaemon(false);
+//            t.start();
+//        }
         
         return tid;
     }
@@ -107,9 +107,9 @@ public class LagoScheduler
         AsyncTask task = new AsyncTask(() -> tasks.remove(tid), handler, null, null);
         tasks.put(tid, task);
         
-        Thread thread = new Thread(task);
-        thread.setDaemon(false);
-        thread.start();
+//        Thread thread = new Thread(task);
+//        thread.setDaemon(false);
+//        thread.start();
         
         return tid;
     }

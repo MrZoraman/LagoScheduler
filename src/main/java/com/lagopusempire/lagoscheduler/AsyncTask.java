@@ -1,58 +1,25 @@
 package com.lagopusempire.lagoscheduler;
 
-final class AsyncTask extends Task implements Runnable
+final class AsyncTask extends Task
 {
-    private final Object lock = new Object();
-    
     public AsyncTask(Runnable doneCallback, TaskBehaviorHandler handler, Runnable task, TaskRepeatInstructions repeatInstructions)
     {
         super(doneCallback, handler, task, repeatInstructions);
-    }
-    
-    @Override
-    public void run()
-    {
         started();
-        while(true)
-        {
-            synchronized(lock)
-            {
-                try
-                {
-                    lock.wait();
-                }
-                catch (InterruptedException ignored)
-                {
-                    setDone();
-                }
-            }
-            
-            if(isDone())
-            {
-                break;
-            }
-            
-            notifyHandlerMethods();
-        }// while true
+    }
+    
+    @Override
+    public void tick()
+    {
+        notifyHandlerMethods();
+        
+        super.tick();
+    }
+    
+    @Override
+    public void setDone()
+    {
+        super.setDone();
         finished();
-    }
-    
-    @Override
-    public void stop()
-    {
-        super.stop();
-        synchronized(lock)
-        {
-            lock.notify();
-        }
-    }
-    
-    @Override
-    protected void onSend()
-    {
-        synchronized(lock)
-        {
-            lock.notify();
-        }
     }
 }
