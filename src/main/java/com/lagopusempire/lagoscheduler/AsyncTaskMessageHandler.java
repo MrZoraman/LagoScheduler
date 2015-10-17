@@ -2,11 +2,11 @@ package com.lagopusempire.lagoscheduler;
 
 public interface AsyncTaskMessageHandler
 {
-    default void onIntReceive(int i) { };
-    default void onDoubleReceive(double d) { };
-    default void onStringReceive(String s) { };
-    default void onBooleanReceive(boolean b) { };
-    default void onVoidReceive() { };
+    default void onReceive(int i) { };
+    default void onReceive(double d) { };
+    default void onReceive(String s) { };
+    default void onReceive(boolean b) { };
+    default void onReceive() { };
     
     default void onStart() { };
     default void onStop() { };

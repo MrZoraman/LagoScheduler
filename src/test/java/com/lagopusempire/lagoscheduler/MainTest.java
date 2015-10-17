@@ -18,27 +18,27 @@ public class MainTest
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending int 24 to test task on thread " + getThreadId());
-                scheduler.sendInt(tid, 24);
+                scheduler.send(tid, 24);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending double 3.141 to test task on thread " + getThreadId());
-                scheduler.sendDouble(tid, 3.141);
+                scheduler.send(tid, 3.141);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending string 'foomfah' to test task on thread " + getThreadId());
-                scheduler.sendString(tid, "foomfah");
+                scheduler.send(tid, "foomfah");
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending boolean false to test task on thread " + getThreadId());
-                scheduler.sendBoolean(tid, false);
+                scheduler.send(tid, false);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
                 System.out.println("sending void to test task on thread " + getThreadId());
-                scheduler.sendVoid(tid);
+                scheduler.send(tid);
                 
                 System.out.println("sender thread sleeping for 1 second on thread " + getThreadId());
                 Thread.sleep(1000);
@@ -69,31 +69,31 @@ public class MainTest
         }
         
         @Override
-        public void onIntReceive(int i)
+        public void onReceive(int i)
         {
             System.out.println("Received int " + i + " on thread " + getThreadId());
         }
         
         @Override
-        public void onDoubleReceive(double d)
+        public void onReceive(double d)
         {
             System.out.println("Received double " + d + " on thread " + getThreadId());
         }
         
         @Override
-        public void onStringReceive(String s)
+        public void onReceive(String s)
         {
             System.out.println("Received string '" + s + "' on thread " + getThreadId());
         }
         
         @Override
-        public void onBooleanReceive(boolean b)
+        public void onReceive(boolean b)
         {
             System.out.println("Received boolean " + b + " on thread " + getThreadId());
         }
         
         @Override
-        public void onVoidReceive()
+        public void onReceive()
         {
             System.out.println("Received void on thread " + getThreadId());
         }

@@ -53,20 +53,20 @@ public class AsyncTask implements Runnable
             switch(type)
             {
                 case INT:
-                    handler.onIntReceive(intBuffer.get());
+                    handler.onReceive(intBuffer.get());
                     break;
                 case DOUBLE:
                     double d = Double.longBitsToDouble(doubleBuffer.get());
-                    handler.onDoubleReceive(d);
+                    handler.onReceive(d);
                     break;
                 case STRING:
-                    handler.onStringReceive(stringBuffer.get());
+                    handler.onReceive(stringBuffer.get());
                     break;
                 case BOOLEAN:
-                    handler.onBooleanReceive(booleanBuffer.get());
+                    handler.onReceive(booleanBuffer.get());
                     break;
                 case VOID:
-                    handler.onVoidReceive();
+                    handler.onReceive();
                     break;
             }
         }
@@ -82,7 +82,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void sendInt(int i)
+    void send(int i)
     {
         intBuffer.set(i);
         typeUpdated.set(Types.INT);
@@ -92,7 +92,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void sendDouble(double d)
+    void send(double d)
     {
         long bits = Double.doubleToLongBits(d);
         doubleBuffer.set(bits);
@@ -103,7 +103,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void sendString(String s)
+    void send(String s)
     {
         stringBuffer.set(s);
         typeUpdated.set(Types.STRING);
@@ -113,7 +113,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void sendBoolean(Boolean b)
+    void send(Boolean b)
     {
         booleanBuffer.set(b);
         typeUpdated.set(Types.BOOLEAN);
@@ -123,7 +123,7 @@ public class AsyncTask implements Runnable
         }
     }
     
-    void sendVoid()
+    void send()
     {
         typeUpdated.set(Types.VOID);
         synchronized(lock)
