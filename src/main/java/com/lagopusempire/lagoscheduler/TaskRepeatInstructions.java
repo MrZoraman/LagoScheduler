@@ -1,6 +1,6 @@
 package com.lagopusempire.lagoscheduler;
 
-public class TaskRepeater
+public class TaskRepeatInstructions
 {
     private final int delay;
     private final int interval;
@@ -13,7 +13,7 @@ public class TaskRepeater
     
     private boolean shouldRun = false;
     
-    public TaskRepeater(int delay, int interval, int repeats)
+    public TaskRepeatInstructions(int delay, int interval, int repeats)
     {
         this.delay = delay;
         this.delayOver = delay <= 0;

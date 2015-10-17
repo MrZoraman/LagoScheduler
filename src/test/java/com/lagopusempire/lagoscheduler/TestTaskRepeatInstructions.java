@@ -3,12 +3,12 @@ package com.lagopusempire.lagoscheduler;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TestTaskRepeater
+public class TestTaskRepeatInstructions
 {
     @Test
     public void testRunOnce()
     {
-        TaskRepeater repeater = new TaskRepeater(0, 1, 1);
+        TaskRepeatInstructions repeater = new TaskRepeatInstructions(0, 1, 1);
         repeater.cycle();
         assertEquals(true, repeater.shouldRun());
         repeater.cycle();
@@ -19,7 +19,7 @@ public class TestTaskRepeater
     @Test
     public void testDelay()
     {
-        TaskRepeater repeater = new TaskRepeater(4, 1, 1);
+        TaskRepeatInstructions repeater = new TaskRepeatInstructions(4, 1, 1);
         for(int ii = 0; ii < 4; ii++)
         {
             repeater.cycle();
@@ -35,7 +35,7 @@ public class TestTaskRepeater
     @Test
     public void testDelay_alt_args()
     {
-        TaskRepeater repeater = new TaskRepeater(4, 0, 0);
+        TaskRepeatInstructions repeater = new TaskRepeatInstructions(4, 0, 0);
         for(int ii = 0; ii < 4; ii++)
         {
             repeater.cycle();
@@ -51,7 +51,7 @@ public class TestTaskRepeater
     @Test
     public void testInfiniteRepeat()
     {
-        TaskRepeater repeater = new TaskRepeater(0, 10, -1);
+        TaskRepeatInstructions repeater = new TaskRepeatInstructions(0, 10, -1);
         for(int runs = 0; runs < 5; runs++)
         {
             for(int ii = 0; ii < 9; ii++)
@@ -68,7 +68,7 @@ public class TestTaskRepeater
     @Test
     public void testRepeats()
     {
-        TaskRepeater repeater = new TaskRepeater(0, 5, 3);
+        TaskRepeatInstructions repeater = new TaskRepeatInstructions(0, 5, 3);
         for(int ii = 0; ii < 4; ii++)
         {
             repeater.cycle();
@@ -110,7 +110,7 @@ public class TestTaskRepeater
     @Test
     public void testEverything()
     {
-        TaskRepeater repeater = new TaskRepeater(5, 8, 3);
+        TaskRepeatInstructions repeater = new TaskRepeatInstructions(5, 8, 3);
         for(int ii = 0; ii < 5; ii++)
         {
             repeater.cycle();
