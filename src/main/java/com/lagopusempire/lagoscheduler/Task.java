@@ -18,6 +18,8 @@ class Task implements TaskOperation
     private final CopyOnWriteArraySet<Object> objectBuffer = new CopyOnWriteArraySet<>();
     private final AtomicInteger voidBuffer = new AtomicInteger(0);
     
+    private final AtomicBoolean starting = new AtomicBoolean(true);
+    
     private final CopyOnWriteArraySet<Types> typeUpdated = new CopyOnWriteArraySet<>();
     
     private final Runnable doneCallback;
@@ -56,13 +58,10 @@ class Task implements TaskOperation
         {
             this.repeatInstructions = repeatInstructions;
         }
-        
-        this.handler.onStart();
     }
     
     public void stop()
     {
-        handler.onStop();
         doneCallback.run();
         done.set(true);
     }
@@ -70,8 +69,15 @@ class Task implements TaskOperation
     @Override
     public boolean doTask()
     {
+        if(starting.get())
+        {
+            handler.onStart();
+            starting.set(false);
+        }
+        
         if(done.get())
         {
+            handler.onStop();
             return true;
         }
         
@@ -84,14 +90,14 @@ class Task implements TaskOperation
             if(result)
             {
                 stop();
-                return true;
+                return false;
             }
         }
         
         if(!repeatInstructions.willRunAgain())
         {
             stop();
-            return true;
+            return false;
         }
         
         return false;
