@@ -31,6 +31,11 @@ public class TaskRepeatInstructions
         this.repeats = repeats == 0 ? 1 : repeats;
     }
     
+    public TaskRepeatInstructions dupe(TaskRepeatInstructions instructions)
+    {
+        return new TaskRepeatInstructions(instructions.delay, instructions.interval, instructions.repeats);
+    }
+    
     public void cycle()
     {
         tick++;
