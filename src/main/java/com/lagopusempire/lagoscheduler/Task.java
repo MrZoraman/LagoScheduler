@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 
 class Task implements TaskOperation
 {
@@ -13,11 +11,12 @@ class Task implements TaskOperation
     
     private final AtomicBoolean done = new AtomicBoolean(false);
     
-    private final AtomicInteger intBuffer = new AtomicInteger(0);
-    private final AtomicLong doubleBuffer = new AtomicLong(0);
-    private final AtomicReference<String> stringBuffer = new AtomicReference<>();
-    private final AtomicBoolean booleanBuffer = new AtomicBoolean(false);
-    private final AtomicReference<Object> objectBuffer = new AtomicReference<>();
+    private final CopyOnWriteArraySet<Integer> intBuffer = new CopyOnWriteArraySet<>();
+    private final CopyOnWriteArraySet<Double> doubleBuffer = new CopyOnWriteArraySet<>();
+    private final CopyOnWriteArraySet<String> stringBuffer = new CopyOnWriteArraySet<>();
+    private final CopyOnWriteArraySet<Boolean> booleanBuffer = new CopyOnWriteArraySet<>();
+    private final CopyOnWriteArraySet<Object> objectBuffer = new CopyOnWriteArraySet<>();
+    private final AtomicInteger voidBuffer = new AtomicInteger(0);
     
     private final CopyOnWriteArraySet<Types> typeUpdated = new CopyOnWriteArraySet<>();
     
@@ -90,6 +89,17 @@ class Task implements TaskOperation
         return false;
     }
     
+    private void clearBuffers()
+    {
+        typeUpdated.clear();
+        intBuffer.clear();
+        doubleBuffer.clear();
+        stringBuffer.clear();
+        booleanBuffer.clear();
+        objectBuffer.clear();
+        voidBuffer.set(0);
+    }
+    
     private void notifyHandlerMethods()
     {
         final Iterator<Types> it = typeUpdated.iterator();
@@ -99,59 +109,67 @@ class Task implements TaskOperation
             switch(type)
             {
                 case INT:
-                    handler.onReceive(intBuffer.get());
+                    Integer[] int_arr = intBuffer.toArray(new Integer[intBuffer.size()]);
+                    handler.onReceive(int_arr);
                     break;
                 case DOUBLE:
-                    double d = Double.longBitsToDouble(doubleBuffer.get());
-                    handler.onReceive(d);
+                    Double[] double_arr = doubleBuffer.toArray(new Double[doubleBuffer.size()]);
+                    handler.onReceive(double_arr);
                     break;
                 case STRING:
-                    handler.onReceive(stringBuffer.get());
+                    String[] string_arr = stringBuffer.toArray(new String[stringBuffer.size()]);
+                    handler.onReceive(string_arr);
                     break;
                 case BOOLEAN:
-                    handler.onReceive(booleanBuffer.get());
+                    Boolean[] boolean_arr = booleanBuffer.toArray(new Boolean[booleanBuffer.size()]);
+                    handler.onReceive(boolean_arr);
+                    break;
+                case OBJECT:
+                    Object[] object_arr = objectBuffer.toArray(new Object[objectBuffer.size()]);
+                    handler.onReceive(object_arr);
                     break;
                 case VOID:
-                    handler.onReceive();
+                    int voids = voidBuffer.get();
+                    handler.onReceive(voids);
                     break;
             }
         }
-        typeUpdated.clear();
+        clearBuffers();
     }
     
     void send(int i)
     {
-        intBuffer.set(i);
+        intBuffer.add(i);
         typeUpdated.add(Types.INT);
     }
     
     void send(double d)
     {
-        long bits = Double.doubleToLongBits(d);
-        doubleBuffer.set(bits);
+        doubleBuffer.add(d);
         typeUpdated.add(Types.DOUBLE);
     }
     
     void send(String s)
     {
-        stringBuffer.set(s);
+        stringBuffer.add(s);
         typeUpdated.add(Types.STRING);
     }
     
     void send(Boolean b)
     {
-        booleanBuffer.set(b);
+        booleanBuffer.add(b);
         typeUpdated.add(Types.BOOLEAN);
     }
     
     void send(Object o)
     {
-        objectBuffer.set(o);
+        objectBuffer.add(o);
         typeUpdated.add(Types.OBJECT);
     }
     
     void send()
     {
         typeUpdated.add(Types.VOID);
+        voidBuffer.incrementAndGet();
     }
 }

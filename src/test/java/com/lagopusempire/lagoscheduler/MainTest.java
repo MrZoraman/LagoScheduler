@@ -73,34 +73,34 @@ public class MainTest
             System.out.println("Async task stopped on thread " + getThreadId());
         }
         
-        @Override
-        public void onReceive(int i)
-        {
-            System.out.println("Received int " + i + " on thread " + getThreadId());
-        }
-        
-        @Override
-        public void onReceive(double d)
-        {
-            System.out.println("Received double " + d + " on thread " + getThreadId());
-        }
-        
-        @Override
-        public void onReceive(String s)
-        {
-            System.out.println("Received string '" + s + "' on thread " + getThreadId());
-        }
-        
-        @Override
-        public void onReceive(boolean b)
-        {
-            System.out.println("Received boolean " + b + " on thread " + getThreadId());
-        }
-        
-        @Override
-        public void onReceive()
-        {
-            System.out.println("Received void on thread " + getThreadId());
-        }
+//        @Override
+//        public void onReceive(int i)
+//        {
+//            System.out.println("Received int " + i + " on thread " + getThreadId());
+//        }
+//        
+//        @Override
+//        public void onReceive(double d)
+//        {
+//            System.out.println("Received double " + d + " on thread " + getThreadId());
+//        }
+//        
+//        @Override
+//        public void onReceive(String s)
+//        {
+//            System.out.println("Received string '" + s + "' on thread " + getThreadId());
+//        }
+//        
+//        @Override
+//        public void onReceive(boolean b)
+//        {
+//            System.out.println("Received boolean " + b + " on thread " + getThreadId());
+//        }
+//        
+//        @Override
+//        public void onReceive()
+//        {
+//            System.out.println("Received void on thread " + getThreadId());
+//        }
     }
 }
