@@ -63,7 +63,7 @@ public class LagoScheduler
         }
     }
     
-    public void spawnRunOnceTaskSync(Runnable r)
+    public void spawnRunOnceSyncTask(Runnable r)
     {
         runOnceSyncRunnables.add(r);
     }
