@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 class Task implements TaskOperation
 {
-    private enum Types { INT, DOUBLE, STRING, BOOLEAN, VOID };
+    private enum Types { INT, DOUBLE, STRING, BOOLEAN, OBJECT, VOID };
     
     private final AtomicBoolean done = new AtomicBoolean(false);
     
@@ -17,6 +17,7 @@ class Task implements TaskOperation
     private final AtomicLong doubleBuffer = new AtomicLong(0);
     private final AtomicReference<String> stringBuffer = new AtomicReference<>();
     private final AtomicBoolean booleanBuffer = new AtomicBoolean(false);
+    private final AtomicReference<Object> objectBuffer = new AtomicReference<>();
     
     private final CopyOnWriteArraySet<Types> typeUpdated = new CopyOnWriteArraySet<>();
     
@@ -141,6 +142,12 @@ class Task implements TaskOperation
     {
         booleanBuffer.set(b);
         typeUpdated.add(Types.BOOLEAN);
+    }
+    
+    void send(Object o)
+    {
+        objectBuffer.set(o);
+        typeUpdated.add(Types.OBJECT);
     }
     
     void send()

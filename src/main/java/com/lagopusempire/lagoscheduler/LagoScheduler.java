@@ -194,6 +194,19 @@ public class LagoScheduler implements TaskOperation, Runnable
         return true;
     }
     
+    public boolean send(int tid, Object o)
+    {
+        Task task = tasks.get(tid);
+        if(task == null)
+        {
+            return false;
+        }
+        
+        task.send(o);
+        
+        return true;
+    }
+    
     public boolean send(int tid)
     {
         Task task = tasks.get(tid);
