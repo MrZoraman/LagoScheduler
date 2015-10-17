@@ -16,7 +16,15 @@ class SyncTask extends Task
         {
             this.task = task;
         }
-        this.repeatInstructions = repeatInstructions;
+        
+        if(repeatInstructions == null)
+        {
+            this.repeatInstructions = new TaskRepeatInstructions(0, 1, 1);
+        }
+        else
+        {
+            this.repeatInstructions = repeatInstructions;
+        }
     }
     
     @Override
