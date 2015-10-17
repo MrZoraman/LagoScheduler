@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-class Task
+class Task implements Runnable
 {
     private enum Types { INT, DOUBLE, STRING, BOOLEAN, VOID };
     
@@ -57,7 +57,8 @@ class Task
         setDone();
     }
     
-    public void tick()
+    @Override
+    public void run()
     {
         notifyHandlerMethods();
         
