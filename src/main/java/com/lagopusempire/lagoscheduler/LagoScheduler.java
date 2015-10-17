@@ -22,7 +22,7 @@ public class LagoScheduler
     private static final int THREAD_POOL_SIZE = 16;
     
     private final AtomicInteger tids = new AtomicInteger(0);
-    private final ConcurrentMap<Integer, WaitingAsyncTask> asyncTasks = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Task> tasks = new ConcurrentHashMap<>();
     private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
     private final ExecutorService runOnceAsyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     
@@ -70,8 +70,8 @@ public class LagoScheduler
     {
         final int tid = tids.getAndIncrement();
         
-        WaitingAsyncTask task = new WaitingAsyncTask(() -> asyncTasks.remove(tid), handler);
-        asyncTasks.put(tid, task);
+        WaitingAsyncTask task = new WaitingAsyncTask(() -> tasks.remove(tid), handler);
+        tasks.put(tid, task);
         
         Thread thread = new Thread(task);
         thread.setDaemon(false);
@@ -80,9 +80,9 @@ public class LagoScheduler
         return tid;
     }
     
-    public boolean stopAsync(int tid)
+    public boolean stop(int tid)
     {
-        WaitingAsyncTask task = asyncTasks.get(tid);
+        Task task = tasks.get(tid);
         if(task == null)
         {
             return false;
@@ -93,9 +93,9 @@ public class LagoScheduler
         return true;
     }
     
-    public boolean sendAsync(int tid, int i)
+    public boolean send(int tid, int i)
     {
-        WaitingAsyncTask task = asyncTasks.get(tid);
+        Task task = tasks.get(tid);
         if(task == null)
         {
             return false;
@@ -106,9 +106,9 @@ public class LagoScheduler
         return true;
     }
     
-    public boolean sendAsync(int tid, double d)
+    public boolean send(int tid, double d)
     {
-        WaitingAsyncTask task = asyncTasks.get(tid);
+        Task task = tasks.get(tid);
         if(task == null)
         {
             return false;
@@ -119,9 +119,9 @@ public class LagoScheduler
         return true;
     }
     
-    public boolean sendAsync(int tid, String str)
+    public boolean send(int tid, String str)
     {
-        WaitingAsyncTask task = asyncTasks.get(tid);
+        Task task = tasks.get(tid);
         if(task == null)
         {
             return false;
@@ -132,9 +132,9 @@ public class LagoScheduler
         return true;
     }
     
-    public boolean sendAsync(int tid, boolean b)
+    public boolean send(int tid, boolean b)
     {
-        WaitingAsyncTask task = asyncTasks.get(tid);
+        Task task = tasks.get(tid);
         if(task == null)
         {
             return false;
@@ -145,9 +145,9 @@ public class LagoScheduler
         return true;
     }
     
-    public boolean sendAsync(int tid)
+    public boolean send(int tid)
     {
-        WaitingAsyncTask task = asyncTasks.get(tid);
+        Task task = tasks.get(tid);
         if(task == null)
         {
             return false;
