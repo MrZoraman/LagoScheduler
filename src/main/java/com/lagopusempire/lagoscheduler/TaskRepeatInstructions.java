@@ -13,6 +13,16 @@ public class TaskRepeatInstructions
     
     private boolean shouldRun = false;
     
+    public static final TaskRepeatInstructions FOREVER()
+    {
+        return new TaskRepeatInstructions(0, 0, -1);
+    }
+    
+    public static final TaskRepeatInstructions ONCE()
+    {
+        return new TaskRepeatInstructions(0, 1, 1);
+    }
+    
     public TaskRepeatInstructions(int delay, int interval, int repeats)
     {
         this.delay = delay;
