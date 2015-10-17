@@ -94,41 +94,6 @@ public class LagoScheduler implements TaskOperation, Runnable
         return tid;
     }
     
-    public void spawnRunOnceAsyncTask(Runnable r, boolean spawnThread)
-    {
-        if(spawnThread)
-        {
-            Thread t = new Thread(r);
-            t.setDaemon(false);
-            t.start();
-        }
-        else
-        {
-            asyncExecutor.execute(r);
-        }
-    }
-    
-    public void spawnRunOnceSyncTask(Runnable r)
-    {
-        //runOnceSyncRunnables.add(r);
-    }
-    
-    public int spawnWaitingAsyncTask(TaskBehaviorHandler handler)
-    {
-        final int tid = tids.getAndIncrement();
-        
-        Task task = new Task(() -> tasks.remove(tid), handler, null, null);
-        tasks.put(tid, task);
-        
-        TaskOperationRepeater taskRepeater = new TaskOperationRepeater(task, TICKS_PER_SECOND);
-        
-        Thread thread = new Thread(taskRepeater);
-        thread.setDaemon(false);
-        thread.start();
-        
-        return tid;
-    }
-    
     public boolean stop(int tid)
     {
         Task task = tasks.get(tid);
