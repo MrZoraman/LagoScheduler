@@ -34,7 +34,7 @@ public class LagoScheduler
         return 0;
     }
     
-    public int spawnTaskAsync(AsyncTaskMessageHandler handler)
+    public int spawnWaitingAsyncTask(AsyncTaskMessageHandler handler)
     {
         final int tid = tids.getAndIncrement();
         

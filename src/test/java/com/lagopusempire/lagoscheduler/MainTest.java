@@ -11,7 +11,7 @@ public class MainTest
     {
         LagoScheduler scheduler = LagoScheduler.getInstance();
         final TestAsyncTask task = new TestAsyncTask();
-        final int tid = scheduler.spawnTaskAsync(task);
+        final int tid = scheduler.spawnWaitingAsyncTask(task);
         Thread t = new Thread(() -> {
             try
             {
