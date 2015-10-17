@@ -18,9 +18,9 @@ public final class WaitingAsyncTask implements Runnable
     private final Object lock = new Object();
     
     private final Runnable doneCallback;
-    private final AsyncTaskMessageHandler handler;
+    private final DataReceiveHandler handler;
     
-    WaitingAsyncTask(Runnable doneCallback, AsyncTaskMessageHandler handler)
+    WaitingAsyncTask(Runnable doneCallback, DataReceiveHandler handler)
     {
         this.doneCallback = doneCallback;
         this.handler = handler;
