@@ -39,7 +39,7 @@ public class LagoScheduler
         
     }
     
-    public int spwanWaitingSyncTask(TaskBehaviorHandler handler, int ticksPerInterval)
+    public int spawnWaitingSyncTask(TaskBehaviorHandler handler, int ticksPerInterval)
     {
         int tid = tids.getAndIncrement();
         
