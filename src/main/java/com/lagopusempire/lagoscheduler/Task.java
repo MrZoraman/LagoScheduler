@@ -74,7 +74,7 @@ class Task implements Runnable
         }
     }
     
-    protected void notifyHandlerMethods()
+    private void notifyHandlerMethods()
     {
         final Iterator<Types> it = typeUpdated.iterator();
         while(it.hasNext())
