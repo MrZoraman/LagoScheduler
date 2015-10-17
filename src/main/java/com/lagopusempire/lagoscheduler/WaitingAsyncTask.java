@@ -2,7 +2,7 @@ package com.lagopusempire.lagoscheduler;
 
 import java.util.concurrent.atomic.*;
 
-public final class WaitingAsyncTask implements Runnable
+final class WaitingAsyncTask implements Runnable
 {
     private enum Types {INT, DOUBLE, STRING, BOOLEAN, VOID};
     
