@@ -4,9 +4,9 @@ final class AsyncTask extends Task implements Runnable
 {
     private final Object lock = new Object();
     
-    public AsyncTask(Runnable doneCallback, TaskBehaviorHandler handler)
+    public AsyncTask(Runnable doneCallback, TaskBehaviorHandler handler, Runnable task, TaskRepeatInstructions repeatInstructions)
     {
-        super(doneCallback, handler);
+        super(doneCallback, handler, task, repeatInstructions);
     }
     
     @Override

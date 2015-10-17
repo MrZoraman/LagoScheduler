@@ -23,10 +23,31 @@ abstract class Task
     private final Runnable doneCallback;
     private final TaskBehaviorHandler handler;
     
-    Task(Runnable doneCallback, TaskBehaviorHandler handler)
+    private final Runnable task;
+    private final TaskRepeatInstructions repeatInstructions;
+    
+    Task(Runnable doneCallback, TaskBehaviorHandler handler, Runnable task, TaskRepeatInstructions repeatInstructions)
     {
         this.doneCallback = doneCallback;
         this.handler = handler;
+        
+        if(task == null)
+        {
+            this.task = () -> { };
+        }
+        else
+        {
+            this.task = task;
+        }
+        
+        if(repeatInstructions == null)
+        {
+            this.repeatInstructions = new TaskRepeatInstructions(0, 1, 1);
+        }
+        else
+        {
+            this.repeatInstructions = repeatInstructions;
+        }
     }
     
     public void stop()
@@ -36,6 +57,16 @@ abstract class Task
     
     public void tick()
     {
+        repeatInstructions.cycle();
+        if(repeatInstructions.shouldRun())
+        {
+            task.run();
+        }
+        
+        if(!repeatInstructions.willRunAgain())
+        {
+            setDone();
+        }
     }
     
     protected void notifyHandlerMethods()
