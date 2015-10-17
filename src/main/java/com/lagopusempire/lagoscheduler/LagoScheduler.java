@@ -53,6 +53,11 @@ public class LagoScheduler implements TaskOperation, Runnable
         doTask();
     }
     
+    public void stop()
+    {
+        done.set(true);
+    }
+    
     public int spawnSyncTask(TaskBehaviorHandler handler, TaskOperation toDo, TaskRepeatInstructions repeatInstructions)
     {
         int tid = tids.getAndIncrement();

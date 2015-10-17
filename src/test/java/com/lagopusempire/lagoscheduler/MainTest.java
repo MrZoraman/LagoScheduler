@@ -32,6 +32,12 @@ public class MainTest
             return false;
         }, repeatInstructions.dupe());
         
+        scheduler.spawnSyncTask(() -> {
+            printWithId("stopping scheduler!");
+            scheduler.stop();
+            return true;
+        }, new TaskRepeatInstructions(20 * 5, 1, 1));
+        
         scheduler.run();
     }
     
