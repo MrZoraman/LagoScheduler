@@ -50,7 +50,7 @@ class Task implements TaskOperation
         
         if(repeatInstructions == null)
         {
-            this.repeatInstructions = new TaskRepeatInstructions(0, 1, 1);
+            this.repeatInstructions = TaskRepeatInstructions.ONCE();
         }
         else
         {
