@@ -23,8 +23,9 @@ public class LagoScheduler
     
     private final AtomicInteger tids = new AtomicInteger(0);
     private final ConcurrentMap<Integer, Task> tasks = new ConcurrentHashMap<>();
-    private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
+    //private final CopyOnWriteArraySet<Runnable> runOnceSyncRunnables = new CopyOnWriteArraySet<>();
     private final ExecutorService runOnceAsyncExecutor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+    private final ConcurrentMap<Integer, WaitingSyncTask> syncTasks = new ConcurrentHashMap<>();
     
     private LagoScheduler()
     {
@@ -33,18 +34,25 @@ public class LagoScheduler
     
     public void runSyncTasks()
     {
-        runOnceSyncRunnables.forEach(r -> r.run());
-        runOnceSyncRunnables.clear();
+        //runOnceSyncRunnables.forEach(r -> r.run());
+        //runOnceSyncRunnables.clear();
+        
+        syncTasks.values().forEach(task -> task.tick());
         
         
     }
     
-    public int spawnWaitingSyncTask(TaskBehaviorHandler handler, int ticksPerInterval)
+    public int spawnSyncTask(TaskBehaviorHandler handler, Runnable toDo, TaskRepeatInstructions repeatInstructions)
     {
         int tid = tids.getAndIncrement();
         
-        WaitingSyncTask task = new WaitingSyncTask(() -> tasks.remove(tid), handler);
+        WaitingSyncTask task = new WaitingSyncTask(() -> {
+            tasks.remove(tid);
+            syncTasks.remove(tid);
+        }, handler, toDo, repeatInstructions);
+        
         tasks.put(tid, task);
+        syncTasks.put(tid, task);
         
         return tid;
     }
@@ -65,7 +73,7 @@ public class LagoScheduler
     
     public void spawnRunOnceSyncTask(Runnable r)
     {
-        runOnceSyncRunnables.add(r);
+        //runOnceSyncRunnables.add(r);
     }
     
     public int spawnWaitingAsyncTask(TaskBehaviorHandler handler)
