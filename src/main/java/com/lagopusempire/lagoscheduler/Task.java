@@ -102,17 +102,6 @@ class Task
         typeUpdated.clear();
     }
     
-    protected void started()
-    {
-        handler.onStart();
-    }
-    
-    protected void finished()
-    {
-        handler.onStop();
-        doneCallback.run();
-    }
-    
     protected void onSend()
     {
     }
@@ -156,6 +145,7 @@ class Task
     {
         done.set(true);
         handler.onStop();
+        doneCallback.run();
     }
     
     public boolean isDone()
